@@ -35,7 +35,8 @@ jobs:
 
       # 4. Jalankan script preprocessing dari dalam subfolder
       - name: Run Automate_Arillah.py
-        run: python prepocessing/Automate_Arillah.py
+        working-directory: ./prepocessing
+        run: python Automate_Arillah.py
 
       # 5. Tangkap dataset hasil proses, lalu commit dan push balik ke GitHub
       - name: Commit and push changes
