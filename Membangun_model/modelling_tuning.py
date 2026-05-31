@@ -8,6 +8,7 @@ import dagshub
 import matplotlib.pyplot as plt
 
 dagshub.init(repo_owner='ForReal-Yuki', repo_name='Eksperimen_SML_Arillah', mlflow=True)
+mlflow.set_experiment("Eksperimen_Lokal_Tunning")
 # 1. Load Data
 df = pd.read_csv('Data Prepocessing.csv')
 
@@ -45,8 +46,28 @@ with mlflow.start_run(run_name="Advance_DagsHub_Model"):
     mlflow.log_metric("r2_score", r2)
     mlflow.sklearn.log_model(best_model, "model")
 
-    # --- ARTEFAK TAMBAHAN UNTUK ADVANCE (Minimal 2) ---
-    print("Membuat dan mengunggah artefak tambahan...")
+    for param_name, param_value in grid_search.best_params_.items():
+        mlflow.log_param(param_name, param_value)
+
+    mlflow.log_metric("mse", mse)
+    mlflow.log_metric("mae", mae)
+    mlflow.log_metric("r2_score", r2)
+
+    # === JALUR PAKSA BIAR FOLDER 'model' MUNCUL ===
+    print("Membuat folder")
+    import os
+    import shutil
+
+    # Kalo folder 'model' udah ada di laptop, hapus dulu biar ga bentrok
+    if os.path.exists("model"):
+        shutil.rmtree("model")
+
+    # 1. Save modelnya secara fisik jadi folder di laptop lu
+    mlflow.sklearn.save_model(best_model, "model")
+
+    # 2. Paksa upload seluruh isi folder 'model' tersebut ke MLflow UI
+    mlflow.log_artifacts("model", artifact_path="model")
+    # =============================================
 
     # Artefak 1: Plot Feature Importance (Melihat fitur mana yang paling ngaruh ke harga sewa)
     plt.figure(figsize=(10, 6))
