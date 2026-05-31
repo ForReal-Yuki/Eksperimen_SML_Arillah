@@ -34,6 +34,6 @@ def prepocessing(input_path, output_path):
     df_cleaned.to_csv(output_path, index=False)
 
 if __name__ == "__main__":
-    RAW = "../House_Rent_Dataset.csv"
-    PROCESS = "Data Prepocessing.csv"
+    RAW = "House_Rent_Dataset.csv"
+    PROCESS = "prepocessing/Data Prepocessing.csv"
     prepocessing(RAW, PROCESS)
