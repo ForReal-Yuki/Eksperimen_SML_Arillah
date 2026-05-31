@@ -1,3 +1,5 @@
+dagshub==0.7.0
+matplotlib==3.10.9
 mlflow==3.12.0
 mlflow_skinny==3.12.0
 mlflow_tracing==3.12.0

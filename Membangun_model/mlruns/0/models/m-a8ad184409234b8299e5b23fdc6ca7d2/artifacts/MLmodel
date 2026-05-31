@@ -1,0 +1,23 @@
+artifact_path: /home/rill/Documents/MSML/Eksperimen_SML_Arillah/Membangun_model/mlruns/0/models/m-a8ad184409234b8299e5b23fdc6ca7d2/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.3
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.8.0
+    skops_trusted_types: null
+mlflow_version: 3.12.0
+model_id: m-a8ad184409234b8299e5b23fdc6ca7d2
+model_size_bytes: 10477742
+model_uuid: m-a8ad184409234b8299e5b23fdc6ca7d2
+prompts: null
+run_id: bed68542b30c414da657b47bf1f78415
+utc_time_created: '2026-05-31 04:00:12.001549'
