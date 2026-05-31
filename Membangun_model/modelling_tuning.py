@@ -70,4 +70,25 @@ with mlflow.start_run(run_name="Advance_DagsHub_Model"):
     mlflow.log_artifact("actual_vs_predicted.png")  # Kirim gambar ke DagsHub
     plt.close()
 
-    print("Selesai! Semua data dan artefak sukses mengudara ke DagsHub!")
+    # Artefak 3: Plot Residual (Melihat sebaran error/selisih prediksi)
+    plt.figure(figsize=(8, 6))
+    residuals = y_test - y_pred
+    plt.scatter(y_pred, residuals, alpha=0.5, color='purple')
+    plt.axhline(y=0, color='r', linestyle='--')
+    plt.xlabel("Tebakan Model (Predicted)")
+    plt.ylabel("Error/Selisih (Residuals)")
+    plt.title("Residual Plot (Sebaran Error)")
+    plt.tight_layout()
+    plt.savefig("residual_plot.png")
+    mlflow.log_artifact("residual_plot.png")  # Kirim gambar ke DagsHub
+    plt.close()
+
+    # Artefak 4: CSV Sample Hasil Prediksi
+    sample_results = pd.DataFrame({
+        'Actual_Rent': y_test,
+        'Predicted_Rent': y_pred,
+        'Selisih_Harga': y_test - y_pred
+    })
+    # Simpan 20 baris pertama aja sebagai sample
+    sample_results.head(20).to_csv("sample_predictions.csv", index=False)
+    mlflow.log_artifact("sample_predictions.csv")  # Kirim file CSV ke DagsHub
