@@ -1,0 +1,51 @@
+name: Automated Data Preprocessing
+
+# Trigger: Actions jalan kalau ada perubahan di dataset/script, atau dijalankan manual
+on:
+  push:
+    paths:
+      - 'House_Rent_Dataset.csv'
+      - 'Automate.py'
+  workflow_dispatch: 
+
+jobs:
+  preprocess_data:
+    runs-on: ubuntu-latest
+    
+    # WAJIB ADA: Biar bot GitHub punya izin buat push (mengembalikan data) ke repo lu
+    permissions:
+      contents: write
+
+    steps:
+      # 1. Ambil kode dari repository lu
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Siapkan Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # 3. Install library dari file requirements.txt yang barusan lu bikin
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4. Jalankan script preprocessing
+      - name: Run Automate.py
+        run: python Automate.py
+
+      # 5. Tangkap dataset hasil proses, lalu commit dan push balik ke GitHub
+      - name: Commit and push changes
+        run: |
+          # Setup identitas bot
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Masukkan semua perubahan (termasuk file CSV baru hasil preprocessing)
+          git add .
+          
+          # Cek apakah ada data baru, kalau ada langsung commit dan push!
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-preprocessing: update dataset siap latih" && git push)
