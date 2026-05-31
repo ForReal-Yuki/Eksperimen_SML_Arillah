@@ -5,13 +5,13 @@ on:
   push:
     paths:
       - 'House_Rent_Dataset.csv'
-      - 'Automate.py'
-  workflow_dispatch: 
+      - 'prepocessing/Automate_Arillah.py'
+  workflow_dispatch:
 
 jobs:
   preprocess_data:
     runs-on: ubuntu-latest
-    
+
     # WAJIB ADA: Biar bot GitHub punya izin buat push (mengembalikan data) ke repo lu
     permissions:
       contents: write
@@ -27,15 +27,15 @@ jobs:
         with:
           python-version: '3.12'
 
-      # 3. Install library dari file requirements.txt yang barusan lu bikin
+      # 3. Install library dari file requirements.txt
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4. Jalankan script preprocessing
-      - name: Run Automate.py
-        run: python Automate.py
+      # 4. Jalankan script preprocessing dari dalam subfolder
+      - name: Run Automate_Arillah.py
+        run: python prepocessing/Automate_Arillah.py
 
       # 5. Tangkap dataset hasil proses, lalu commit dan push balik ke GitHub
       - name: Commit and push changes
