@@ -19,7 +19,7 @@ with mlflow.start_run(run_name="CI_Automated"):
     model.fit(X_train, y_train)
     print("Model Linier selesai dilatih")
 
-    if os.path.exist("model_dir"):
+    if os.path.exists("model_dir"):
         shutil.rmtree("model_dir")
     mlflow.sklearn.log_model(model, "model_dir")
     print("Task Selesai ada di model_dir")
