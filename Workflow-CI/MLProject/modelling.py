@@ -8,7 +8,7 @@ from sklearn.ensemble import RandomForestRegressor
 
 mlflow.set_tracking_uri("file://" + os.path.abspath("mlruns_temp"))
 
-#Load Data
+# Load Data
 df = pd.read_csv('Data Prepocessing.csv')
 X = df.drop(columns=['Rent'])
 y = df['Rent']
@@ -20,10 +20,9 @@ with mlflow.start_run(run_name="CI_Automated_Run"):
     model = RandomForestRegressor(random_state=42)
     model.fit(X_train, y_train)
 
-    #Siapkan folder statis
+    # Siapkan folder
     if os.path.exists("model_dir"):
         shutil.rmtree("model_dir")
 
-    #PENTING: Harus save_model agar Docker bisa baca, BUKAN log_model
     mlflow.sklearn.save_model(model, "model_dir")
     print("Training selesai dan model fisik disimpan di model_dir")
