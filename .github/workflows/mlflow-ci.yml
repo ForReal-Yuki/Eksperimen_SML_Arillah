@@ -1,0 +1,49 @@
+name: MLflow CI to Docker Hub
+
+on:
+  push:
+    paths:
+      - 'Workflow-CI/**'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          pip install mlflow scikit-learn pandas
+          
+      - name: Train Model & Save Artifact
+        run: |
+          cd Workflow-CI/MLProject
+          python modelling.py
+          
+      - name: Upload Artifact to GitHub (Skilled Level)
+        uses: actions/upload-artifact@v3
+        with:
+          name: model-artifact
+          path: Workflow-CI/MLProject/model_dir/
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DUCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker Image using MLflow build-docker (Advance Level)
+        run: |
+          cd Workflow-CI/MLProject
+          mlflow models build-docker -m model_dir -n ${{ secrets.DUCKER_USERNAME }}/house-rent-model:latest
+
+      - name: Push Image to Docker Hub
+        run: |
+          docker push ${{ secrets.DUCKER_USERNAME }}/house-rent-model:latest
